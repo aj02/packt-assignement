@@ -2,10 +2,11 @@
 
 use Inertia\Inertia;
 use App\Models\Photo;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\FileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,4 +114,6 @@ Route::get('photos', function () {
 });
 
 
-
+// Route::get('/', [FileController::class, 'index']);
+Route::post('/upload', [FileController::class, 'upload'])->name('upload');
+Route::post('/upload/record', [FileController::class, 'uploadRecord'])->name('upload-record');

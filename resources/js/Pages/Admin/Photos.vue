@@ -1,101 +1,116 @@
 <template>
-    <app-layout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Photos</h2>
-        </template>
+    <input type="file" accept=".csv" @change="handleFileUpload( $event )"/>
+    <table v-if="parsed" style="width: 100%;">
+    <thead>
+        <tr>
+            <th v-for="(header, key) in content.meta.fields"
+                v-bind:key="'header-'+key">
+                {{ header }}
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="(row, rowKey) in content.data"
+            v-bind:key="'row-'+rowKey">
+                <td v-for="(column, columnKey) in content.meta.fields"
+                    v-bind:key="'row-'+rowKey+'-column-'+columnKey">
+                        <input v-model="content.data[rowKey][column]"/>
+                </td>
+        </tr>
+    </tbody>
+</table>
 
-         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-              <!-- All posts goes here -->
-              <h1 class="text-2xl">Photos</h1>
-              <a class="px-4 bg-sky-900 text-white rounded-md" :href="route('admin.photos.create')">Create</a>
-              <div class="flex flex-col">
-                  <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                      <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                          <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                              <table class="min-w-full divide-y divide-gray-200">
-                                  <thead class="bg-gray-50">
-                                      <tr>
-                                          <th
-                                              scope="col"
-                                              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                          >ID</th>
-                                          <th
-                                              scope="col"
-                                              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                          >Photos</th>
-                                          <th
-                                              scope="col"
-                                              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                          >Description</th>
-                                          <th scope="col" class="relative px-6 py-3">
-                                              <span class="sr-only">Edit</span>
-                                          </th>
-                                      </tr>
-                                  </thead>
-                                  <tbody class="bg-white divide-y divide-gray-200">
-                                      <tr v-for="photo in photos" :key="photo.id">
-                                          <td class="px-6 py-4 whitespace-nowrap">
-                                              <div
-                                                  class="text-sm text-gray-900"
-                                              >{{ photo.id }}</div>
-                                          </td>
-
-                                          <td class="px-6 py-4 whitespace-nowrap">
-                                              <div class="flex items-center">
-                                                  <div class="flex-shrink-0 h-10 w-10">
-                                                      <img
-                                                          class="h-10 w-10 rounded-full"
-                                                          :src="photo.path"
-                                                          alt
-                                                      />
-                                                  </div>
-                                              </div>
-                                          </td>
-
-                                          <td class="px-6 py-4 whitespace-nowrap">
-                                              <div class="text-sm text-gray-900">
-                                                {{ photo.description.slice(0, 100) + '...' }}
-                                              </div>
-                                          </td>
-                                        <!-- ACTIONS -->
-                                          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="#" class="text-indigo-600 hover:text-indigo-900">
-                                                View - Edit -
-
-                                                <jet-danger-button @click="delete_photo(photo)">
-                                                    Delete
-                                                </jet-danger-button>
-                                                </a>
-                                            </td>
-                                      </tr>
-                                  </tbody>
-                              </table>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-    </app-layout>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import AppLayout from "@/Layouts/AppLayout.vue";
-// 0. Import the useForm class at the top of the script section along with all required components
-import { useForm } from '@inertiajs/inertia-vue3';
-import JetDangerButton from '@/Jetstream/DangerButton.vue';
-import { ref } from "vue";
+import Papa from 'papaparse';
+import axios from 'axios';
 
+export default {
+    data(){
+        return {
+            file: '',
+            content: [],
+            parsed: false
+        }
+    },
 
-export default defineComponent({
-  components: {
-    AppLayout,
-  },
-  /* 👇 Pass the photos array as a props 👇 */
-  props: {
-    photos: Array,
-  },
-});
+    methods: {
+        handleFileUpload( event ){
+            this.file = event.target.files[0];
+            this.parseFile();
+            // this.submitUpdates();
+        },
+        parseFile(){
+            Papa.parse( this.file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function( results ){
+                    this.content = results;
+                    console.log("parsing started");
+                    console.log(results.data);
+                    for (let i = 0; i < results.data.length; i++) {
+                        console.log(results.data[i]);
+                        let emailValid = true;
+                        let firstNameValid = true;
+                        let lastNameValid = true;
+
+                        console.log(typeof results.data[i]['first_name']);
+
+                        if(results.data[i]['email'] == null)
+                        {
+                            emailValid = false;
+                        }
+                        if(results.data[i]['first_name'] === '')
+                        {
+                            firstNameValid = false;
+                        }
+                        if(results.data[i]['last_name'] == null)
+                        {
+                            lastNameValid = false;
+                        }
+                        console.log(firstNameValid);
+                    }
+                    this.parsed = true;
+                }.bind(this)
+            } );
+        },
+        showFileNames(evt){
+            this.files = evt.target.files;
+        },
+        submitUpdates(){
+            axios.post( '/preview-file-changes',
+                this.content.data
+            ).then(function(){
+                console.log('SUCCESS!!');
+            })
+            .catch(function(){
+                console.log('FAILURE!!');
+            });
+        },
+        uploadFiles(){
+            // let formData = new FormData();
+            // formData.append('files', this.files);
+            let formData = new FormData();
+            for (let i = 0; i < this.files.length; i++) {
+                formData.append('files[]', this.files[i]);
+            }
+
+            for (let i = 0; i < this.files.length; i++) {
+                let formData = new FormData();
+                formData.append('record', this.files[i]);
+
+                axios.post('/upload/record',
+                    formData,
+                    {
+                        headers: {
+                        }
+                    }
+                ).then(function(res){
+                });
+            }
+
+        }
+    },
+}
 </script>
