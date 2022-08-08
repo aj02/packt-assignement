@@ -1,22 +1,39 @@
 <template>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<form>
+  <!-- Content here -->
+
+
+  <div class="form-group">
+    <label for="exampleFormControlFile1">User File</label>
     <input type="file" accept=".csv" @change="handleFileUpload( $event )"/>
-    <table v-if="parsed" style="width: 100%;">
+  </div>
+</form>
+
+
+
+    <table v-if="parsed" style="width: 100%;border: 1px solid black;">
     <thead>
         <tr>
-            <th v-for="(header, key) in content.meta.fields"
+            <th v-for="(header, key) in ['email', 'person_prefix', 'first_name', 'last_name', 'active', 'status']"
                 v-bind:key="'header-'+key">
                 {{ header }}
             </th>
         </tr>
     </thead>
     <tbody>
+
+
         <tr v-for="(row, rowKey) in content.data"
             v-bind:key="'row-'+rowKey">
-                <td v-for="(column, columnKey) in content.meta.fields"
+                <td v-for="(column, columnKey) in ['email', 'person_prefix', 'first_name', 'last_name', 'active', 'status']"
                     v-bind:key="'row-'+rowKey+'-column-'+columnKey">
                         <input v-model="content.data[rowKey][column]"/>
                 </td>
         </tr>
+
     </tbody>
 </table>
 
@@ -46,31 +63,32 @@ export default {
                 header: true,
                 skipEmptyLines: true,
                 complete: function( results ){
-                    this.content = results;
+
                     console.log("parsing started");
                     console.log(results.data);
                     for (let i = 0; i < results.data.length; i++) {
-                        console.log(results.data[i]);
-                        let emailValid = true;
-                        let firstNameValid = true;
-                        let lastNameValid = true;
+                        results.data[i]['status'] = 'Valid';
 
-                        console.log(typeof results.data[i]['first_name']);
-
-                        if(results.data[i]['email'] == null)
+                        if(results.data[i]['email'] == '')
                         {
-                            emailValid = false;
+                            console.log("email");
+                            results.data[i]['status'] = 'Invalid';
                         }
                         if(results.data[i]['first_name'] === '')
                         {
-                            firstNameValid = false;
+                            console.log("fname");
+
+                            results.data[i]['status'] = 'Invalid';
                         }
-                        if(results.data[i]['last_name'] == null)
+                        if(results.data[i]['last_name'] == '')
                         {
-                            lastNameValid = false;
+                            console.log("lname");
+
+                            results.data[i]['status'] = 'Invalid';
                         }
-                        console.log(firstNameValid);
+
                     }
+                    this.content = results;
                     this.parsed = true;
                 }.bind(this)
             } );
