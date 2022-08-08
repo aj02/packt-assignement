@@ -76,6 +76,7 @@
     "is-extglob": "^2.1.1",
     "is-glob": "^4.0.3",
     "is-number": "^7.0.0",
+    "jquery": "^3.6.0",
     "lilconfig": "^2.0.6",
     "lodash.castarray": "^4.4.0",
     "lodash.clonedeep": "^4.5.0",
