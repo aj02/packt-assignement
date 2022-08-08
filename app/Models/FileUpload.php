@@ -5,8 +5,12 @@ use Illuminate\Database\Eloquent\Model;
 class FileUpload extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'name',
-        'path'
+        'email',
+        'person_prefix',
+        'first_name',
+        'last_name',
+        'active'
     ];
 }
