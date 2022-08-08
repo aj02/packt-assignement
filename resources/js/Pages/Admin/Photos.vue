@@ -22,7 +22,7 @@
 
         <div class="progress-group" v-show="processing" >
             Processing [ {{ processingMessage }} ]
-            <span class="float-right"><b>{{ currentProcessingRecord }}</b>/{{ totalProcessingRecords }}</span>
+            <span class="float-right"><b>{{ currentProcessingRecord }}</b>/{{ totalProcessingRecords }} | {{ percProcessingProgress  }}</span>
             <div class="progress progress-sm">
                 <div class="progress-bar bg-danger" :style="'width:'+ percProcessingProgress +'%;'"></div>
             </div>
@@ -106,7 +106,8 @@ export default {
             percProcessingProgress: 0,
             processingMessage: '',
             isHidden : true,
-            counter: 0
+            counter: 0,
+            validating: false
         }
     },
 
@@ -116,12 +117,20 @@ export default {
             this.parseFile();
             // this.submitUpdates();
         },
-        parseFile(){
+        async parseFile(){
             this.validating = true;
+
             Papa.parse( this.file, {
                 header: true,
                 skipEmptyLines: true,
+                before: function(file, inputElem)
+                {
+                    this.validating = true;
+                    // executed before parsing each file begins;
+                    // what you return here controls the flow
+                },
                 complete: function( results ){
+
                     this.percValidationProgress = 0;
                     this.validationMessage = '';
                     this.processingMessage = '';
@@ -129,6 +138,7 @@ export default {
                     this.totalValidationRecords = results.data.length;
                     this.currentValidationRecord = 0;
 
+                    this.validating = true;
 
                     console.log("parsing started");
                     console.log(results.data);
@@ -145,7 +155,7 @@ export default {
                         results.data[i]['status'] = 'Valid';
 
                         Object.entries(results.data[i]).forEach(item => {
-                            console.log(item[0]);
+                            // console.log(item[0]);
                             this.validationMessage = 'Validated '+this.currentValidationRecord+' / '+this.totalValidationRecords+' records => ';
                             this.validationMessage += 'Now validating '+item[0].toString();
                             if(item[0] == 'email' && results.data[i]['email'] == '')
@@ -183,6 +193,8 @@ export default {
         },
 
         async processFile() {
+            this.scrollToTop();
+
             this.processing = true;
 
             this.percProcessingProgress = 0;
@@ -196,16 +208,22 @@ export default {
             for (let i = 0; i < this.valid.length; i++) {
                 this.currentProcessingRecord = this.currentProcessingRecord + 1;
 
+                this.percProcessingProgress = Math.round(this.currentProcessingRecord / this.totalProcessingRecords) * 100;
+                this.processingMessage = 'Processed '+this.currentProcessingRecord+' / '+this.totalProcessingRecords+' records.';
+                // console.log(this.percProcessingProgress);
+
                 // POST request using axios with async/await
                 axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 console.log(this.valid[i]);
                 const user = { data: this.valid[i]};
                 const response = await axios.post("/upload/record", user);
 
-                this.percProcessingProgress = Math.round(this.currentProcessingRecord / this.totalProcessingRecords) * 100;
-                this.processingMessage = 'Processed '+this.currentProcessingRecord+' / '+this.totalProcessingRecords+' records.';
+
             }
 
+        },
+        scrollToTop() {
+            window.scrollTo(0,0);
         }
     },
 }
