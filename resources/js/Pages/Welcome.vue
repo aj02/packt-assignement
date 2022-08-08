@@ -82,6 +82,10 @@ defineProps({
                                 <br>
                                 B. Processing.
                             </div>
+                            <div>
+                                <br><br><br>
+                                <a href="/admin/file-upload" style="border: 1px solid black;"><button>Click here for Assignment 1</button></a>
+                            </div>
                         </div>
                     </div>
 

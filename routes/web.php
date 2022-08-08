@@ -40,6 +40,10 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('admin')->name('admin.')
         return inertia('Admin/Photos');
     })->name('photos'); // This will respond to requests for admin/photos and have a name of admin.photos
 
+    Route::get('/file-upload', function () {
+        return inertia('Admin/FileUpload');
+    })->name('file-upload'); // This will respond to requests for admin/photos and have a name of admin.photos
+
     Route::get('/photos/create', function () {
         return inertia('Admin/PhotosCreate');
     })->name('photos.create');

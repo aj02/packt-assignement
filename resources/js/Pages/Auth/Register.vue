@@ -27,9 +27,7 @@ const submit = () => {
     <Head title="Register" />
 
     <JetAuthenticationCard>
-        <template #logo>
-            <JetAuthenticationCardLogo />
-        </template>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQki4aVA-KIK_z5aOdv2csGBN3uvPDNIqhfuEoXEq6d&amp;s" alt="" data-v-6e0fb345="">
 
         <JetValidationErrors class="mb-4" />
 

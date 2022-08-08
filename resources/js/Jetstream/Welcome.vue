@@ -14,10 +14,7 @@ import JetApplicationLogo from '@/Jetstream/ApplicationLogo.vue';
             </div>
 
             <div class="mt-6 text-gray-500">
-                Laravel Jetstream provides a beautiful, robust starting point for your next Laravel application. Laravel is designed
-                to help you build your application using a development environment that is simple, powerful, and enjoyable. We believe
-                you should love expressing your creativity through programming, so we have spent time carefully crafting the Laravel
-                ecosystem to be a breath of fresh air. We hope you love it.
+                <a href="/admin/file-upload" style="border: 1px solid black;"><button>Click here for Assignment 1</button></a>
             </div>
         </div>
 
