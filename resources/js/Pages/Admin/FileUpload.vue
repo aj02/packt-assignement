@@ -8,27 +8,35 @@
 <link rel="stylesheet" href="https://adminlte.io/themes/v3/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
 <link rel="stylesheet" href="https://adminlte.io/themes/v3/dist/css/adminlte.min.css?v=3.2.0">
 <!-- Content here -->
-    <div class="col-md-12">
-        <p class="text-center">
-            <strong>Upload Status</strong>
-        </p>
-        <div class="progress-group" v-show="validating">
-            Validation [ {{ validationMessage }} ]
-            <span class="float-right"><b>{{ currentValidationRecord }}</b>/{{ totalValidationRecords }}</span>
-            <div class="progress progress-sm">
-                <div class="progress-bar bg-primary" :style="'width:'+ percValidationProgress +'%;'"></div>
+<div class="row">
+    <div class="col-md-4 col-sm-6 col-12">
+        <div class="info-box">
+        <span class="info-box-icon bg-info"><i class="far fa-thumbs-up"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Total</span>
+                <span class="info-box-number">{{ valid.length + invalid.length }}</span>
             </div>
         </div>
-
-        <div class="progress-group" v-show="processing" >
-            Processing [ {{ processingMessage }} ]
-            <span class="float-right"><b>{{ currentProcessingRecord }}</b>/{{ totalProcessingRecords }} | {{ percProcessingProgress  }}</span>
-            <div class="progress progress-sm">
-                <div class="progress-bar bg-danger" :style="'width:'+ percProcessingProgress +'%;'"></div>
-            </div>
-        </div>
-
     </div>
+    <div class="col-md-4 col-sm-6 col-12">
+        <div class="info-box bg-success">
+        <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Valid</span>
+                <span class="info-box-number">{{ valid.length }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 col-12">
+        <div class="info-box bg-gradient-danger">
+        <span class="info-box-icon"><i class="far fa-thumbs-down"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Invalid</span>
+                <span class="info-box-number">{{ invalid.length }}</span>
+            </div>
+        </div>
+    </div>
+</div>
     <form onsubmit="return false;">
         <div class="card card-primary">
             <div class="card-header">
@@ -82,6 +90,29 @@
             </div>
         </div>
     </form>
+
+
+    <div class="col-md-12">
+        <p class="text-center">
+            <strong>Upload Status</strong>
+        </p>
+        <div class="progress-group" v-show="validating">
+            Validation [ {{ validationMessage }} ]
+            <span class="float-right"><b>{{ currentValidationRecord }}</b>/{{ totalValidationRecords }}</span>
+            <div class="progress progress-sm">
+                <div class="progress-bar bg-primary" :style="'width:'+ percValidationProgress +'%;'"></div>
+            </div>
+        </div>
+
+        <div class="progress-group" v-show="processing" >
+            Processing [ {{ processingMessage }} ]
+            <span class="float-right"><b>{{ currentProcessingRecord }}</b>/{{ totalProcessingRecords }} | {{ percProcessingProgress  }}</span>
+            <div class="progress progress-sm">
+                <div class="progress-bar bg-danger" :style="'width:'+ percProcessingProgress +'%;'"></div>
+            </div>
+        </div>
+
+    </div>
 </template>
 
 <script>
@@ -193,7 +224,7 @@ export default {
         },
 
         async processFile() {
-            this.scrollToTop();
+            // this.scrollToTop();
 
             this.processing = true;
 
