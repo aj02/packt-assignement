@@ -1,4 +1,4 @@
-# Packt Assignement
+# Packt Assignment
 ## _Laravel 9 and Vue 3_
 
 Pre-requisite to run this project
