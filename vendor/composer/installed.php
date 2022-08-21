@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-scilife-assignment-1',
         'version' => 'dev-scilife-assignment-1',
-        'reference' => '4db2230f7d54c51f558940bf95dc8d1080b4ae52',
+        'reference' => '936c4cd626059e23d26423d3a823209ae4a202b4',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -448,7 +448,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-scilife-assignment-1',
             'version' => 'dev-scilife-assignment-1',
-            'reference' => '4db2230f7d54c51f558940bf95dc8d1080b4ae52',
+            'reference' => '936c4cd626059e23d26423d3a823209ae4a202b4',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

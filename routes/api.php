@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/books', function (Request $request) {
+    $response = Http::get('https://api.packt.com/api/v1/products?token=iWBfwxzpfggY5kunlL70pOsQg1oUiX5JeOXCTWCy');
+
+    $response = json_decode($response->getBody());
+
+    return $response;
+
 });

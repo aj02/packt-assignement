@@ -24,7 +24,9 @@ const submit = () => {
     <Head title="Forgot Password" />
 
     <JetAuthenticationCard>
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQki4aVA-KIK_z5aOdv2csGBN3uvPDNIqhfuEoXEq6d&amp;s" alt="" data-v-6e0fb345="">
+        <template #logo>
+            <JetAuthenticationCardLogo />
+        </template>
 
         <div class="mb-4 text-sm text-gray-600">
             Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
